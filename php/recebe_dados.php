@@ -2,10 +2,12 @@
     // Recebe os dados e guarda-os em variáveis
     // 
     // classe para controlar as hospedagens e ingressos
-include_once "inc_viagem.php";
-include_once "list_viagem.php";
-include_once "inc_roteiro.php";
-include_once "inc_hospedagem.php";
+Function trata_o_form() {
+
+require_once "inc_viagem.php";
+//require_once "list_viagem.php";
+//require_once "inc_roteiro.php";
+//require_once "inc_hospedagem.php";
 
     class Hospedagem {
         public $tipo;
@@ -41,19 +43,19 @@ include_once "inc_hospedagem.php";
     $intposvit  =   filter_input(INPUT_POST,'f_posicao',FILTER_SANITIZE_NUMBER_INT);
     $introtpar  =   filter_input(INPUT_POST,'f_parceiro',FILTER_SANITIZE_NUMBER_INT);
     
-    echo "$strnome<br>";
-    echo "$dtadata<br>";
-    echo "$intposvit<br>";
-    echo "$introtpar<br>";
+//    echo "$strnome<br>";
+//    echo "$dtadata<br>";
+//    echo "$intposvit<br>";
+//    echo "$introtpar<br>";
 
     //ROTEIRO
     $strdescricao   =   filter_input(INPUT_POST,'f_roteiro',FILTER_SANITIZE_STRING);
     $strincluso     =   filter_input(INPUT_POST,'f_incluso',FILTER_SANITIZE_STRING);
     $strnincluso    =   filter_input(INPUT_POST,'f_nincluso',FILTER_SANITIZE_STRING);
 
-    echo "$strdescricao<br>";
-    echo "$strincluso<br>";
-    echo "$strnincluso<br>";
+//    echo "$strdescricao<br>";
+//    echo "$strincluso<br>";
+//    echo "$strnincluso<br>";
 
     //EMBARQUE E DESEMBARQUE
     $strembarque    =   filter_input(INPUT_POST,'f_embarque',FILTER_SANITIZE_STRING);
@@ -61,50 +63,51 @@ include_once "inc_hospedagem.php";
     $dtacheckin     =   filter_input(INPUT_POST,'f_checkin',FILTER_SANITIZE_STRING);
     $dtacheckout    =   filter_input(INPUT_POST,'f_checkout',FILTER_SANITIZE_STRING);
 
-    echo "$strembarque<br>";
-    echo "$strdesembarque<br>";
-    echo "$dtacheckin<br>";
-    echo "$dtacheckout<br>";
+//    echo "$strembarque<br>";
+//    echo "$strdesembarque<br>";
+//    echo "$dtacheckin<br>";
+//    echo "$dtacheckout<br>";
     
     //HOSPEDAGENS/INGRESSOS
-    $strhospedagens_1 = new Hospedagem();
 
-    $strhospedagens_1->tipo     =   isset($_POST['f_tipo']) ? $_POST['f_tipo'] : FALSE;
-    $strhospedagens_1->preco    =   isset($_POST['f_preco']) ? $_POST['f_preco'] : FALSE;
-    $strhospedagens_1->pagamento=   isset($_POST['f_pagamento']) ? $_POST['f_pagamento'] : FALSE;
-    
-    $strhospedagens             =   isset($_POST['arrayEnviado']) ? json_decode($_POST['arrayEnviado']) : FALSE;
+    if (!empty($_POST['f_tipo'])) {
 
-    var_dump(isset($_POST['arrayEnviado']));
-    var_dump(isset($_POST['f_tipo']));
-    var_dump(isset($_POST['f_preco']));
-    var_dump(isset($_POST['f_pagamento']));
-    
-    //verifica se tem mais de uma hospedagem/ingresso e
-    //cria uma unica matriz para esse controle
-    if (isset($_POST['arrayEnviado'])) {
-        array_push($strhospedagens,$strhospedagens_1);
-    } else {
-        $strhospedagens = array ($strhospedagens_1);
-    }
+        $tipo=$_POST['f_tipo'];
+        $preco=$_POST['f_preco'];
+        $pagamento=$_POST['f_pagamento'];
+        $conthosp = count($tipo);
         
-    
-    echo "<pre>";
-    print_r($strhospedagens);
-    print_r($strhospedagens_1);
-    echo "</pre>";
+        $strhospedagens_1 = new Hospedagem();
+        $strhospedagens_1->tipo         =   $tipo;
+        $strhospedagens_1->preco        =   $preco;
+        $strhospedagens_1->pagamento    =   $pagamento;
+
+    };
+
+    //$strhospedagens             =   isset($_POST['arrayEnviado']) ? json_decode($_POST['arrayEnviado']) : FALSE;
+
+//    echo "<pre>";
+//    print_r($strhospedagens_1);
+//    echo "</pre>";
+
+    //POLITICAS
+    $strcodpol   =   isset($_POST['f_doc']) ? $_POST['f_doc'] : FALSE;
+//    echo "<pre>";
+//    print_r($strcodpol);
+//    echo "</pre>";
+
     
     //IMAGENS
     $strcapa        = isset($_FILES['f_capa']) ? $_FILES['f_capa'] : FALSE;
     $strfotos       = isset($_FILES['f_fotos']) ? $_FILES['f_fotos'] : FALSE;
     
-    var_dump(isset($_FILES['f_capa']));
-    var_dump(isset($_FILES['f_fotos']));
-
-    echo "<pre>";
-    print_r($strcapa);
-    print_r($strfotos);
-    echo "</pre>";
+//    var_dump(isset($_FILES['f_capa']));
+//    var_dump(isset($_FILES['f_fotos']));
+//
+//    echo "<pre>";
+//    print_r($strcapa);
+//    print_r($strfotos);
+//    echo "</pre>";
     
     switch ($stroperacao){
     case "C":
@@ -114,9 +117,9 @@ include_once "inc_hospedagem.php";
         $strtipoc=$strcapa["type"];
         $strtmpc=$strcapa["tmp_name"];
         $strtamc=$strcapa["size"];
-        echo "<pre>";
-        print_r($strcapa_1);
-        echo "</pre>";
+//        echo "<pre>";
+//        print_r($strcapa_1);
+//        echo "</pre>";
         
         //inicializa a variavel de array que guardará as propriedades dos arquivos
         $arfotos = array();
@@ -133,9 +136,9 @@ include_once "inc_hospedagem.php";
 //                $artipof[$i]= $strfotos["type"][$i];
                 $artmpf[$i]= $strfotos["tmp_name"][$i];
 //                $artamf[$i]= $strfotos["size"][$i];
-                echo "<pre>";
-                print_r($arfotos[$i]);
-                echo "</pre>";
+//                echo "<pre>";
+//                print_r($arfotos[$i]);
+//                echo "</pre>";
             }
             $imagensfaltantes=5-count($strfotos["name"]);
             for ($i=0;$i < $imagensfaltantes;$i++){
@@ -154,24 +157,25 @@ include_once "inc_hospedagem.php";
         $arpagamento   = array();
 
         //valida se existem hospedagens para serem carregadas
-        if ($strhospedagens){
+        if ($strhospedagens_1){
             //guarda as informações das hospedagens
-            for ($i=0;$i < count($strhospedagens);$i++){
-                $arhospedagens[$i]= $strhospedagens[$i]->tipo;
-                $arpreco[$i]= $strhospedagens[$i]->preco;
-                $arpagamento[$i]= $strhospedagens[$i]->pagamento;
+            for ($i=0;$i < $conthosp;$i++){
+                $arhospedagens[$i]= $strhospedagens_1->tipo[$i];
+                $arpreco[$i]= $strhospedagens_1->preco[$i];
+                $arpagamento[$i]= $strhospedagens_1->pagamento[$i];
 
-                echo "<pre>";
-                print_r($arhospedagens[$i]);
-                print_r($arpreco[$i]);
-                print_r($arpagamento[$i]);
-                echo "</pre>";
+//                echo "<pre>";
+//                print_r($conthosp);
+//                print_r($arhospedagens[$i]);
+//                print_r($arpreco[$i]);
+//                print_r($arpagamento[$i]);
+//                echo "</pre>";
             }
-            $hospedagensfaltantes=10-count($strhospedagens);
+            $hospedagensfaltantes=10-$conthosp;
             for ($i=0;$i < $hospedagensfaltantes;$i++){
-                $arhospedagens[$i+count($strhospedagens)]= NULL;
-                $arpreco[$i+count($strhospedagens)]= NULL;
-                $arpagamento[$i+count($strhospedagens)]= NULL;
+                $arhospedagens[$i+$conthosp]= NULL;
+                $arpreco[$i+$conthosp]= NULL;
+                $arpagamento[$i+$conthosp]= NULL;
             }
         } else {
             for ($i=0;$i < 10;$i++){
@@ -180,6 +184,8 @@ include_once "inc_hospedagem.php";
                 $arpagamento[$i]= NULL;
             }
         };
+        
+        $strnmepar = "teste";
         
         //inclusão das tres tabelas por SP
         $msg=inc_viagem($strnome,$strcapa_1,1,$strtmpc,
@@ -192,7 +198,7 @@ include_once "inc_hospedagem.php";
                         $strincluso,$strnincluso,
                         $dtacheckin,$dtacheckout,
                         $strembarque,$strdesembarque,
-                        $introtpar,"teste",$intposvit,
+                        $introtpar,$strnmepar,$intposvit,$strcodpol,
                         $arhospedagens[0],$arpreco[0],$arpagamento[0],
                         $arhospedagens[1],$arpreco[1],$arpagamento[1],
                         $arhospedagens[2],$arpreco[2],$arpagamento[2],
@@ -204,11 +210,8 @@ include_once "inc_hospedagem.php";
                         $arhospedagens[8],$arpreco[8],$arpagamento[8],
                         $arhospedagens[9],$arpreco[9],$arpagamento[9]);
 
-        echo $msg;
-        
-        $retorno=lista();
-        echo $retorno;
-
+        return $msg;
         break;
     }
+}
 ?>

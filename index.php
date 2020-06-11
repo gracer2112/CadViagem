@@ -1,3 +1,12 @@
+<?php
+    require_once 'php/recebe_dados.php';
+    
+    if (session_status() !== PHP_SESSION_ACTIVE){
+        session_start();
+        echo $_SESSION['ss_id_usuario'];                          
+    };
+
+?>
 <!DOCTYPE html>
 
 <html>
@@ -23,11 +32,10 @@
         <link href="css/style.css" rel="stylesheet">
     </head>
 
-<!--Corpo da pagina de cadastro de viagens-->
     <body>
-
+<!--Corpo da pagina de cadastro de viagens-->
         <div class="container">
-        <form class="form-horizontal" id="f_cadastro" enctype="multipart/form-data" name="f_cadastro" method="post" action="php/recebe_dados.php">
+        <form class="form-horizontal" id="f_cadastro" enctype="multipart/form-data" name="f_cadastro" method="post" >
             <fieldset>
                 <div class="panel panel-primary">
                 <div class="panel-heading">Cadastro de Viagens</div>
@@ -154,32 +162,52 @@
                         </div>
 
                         <!-- Text input tabela preco -->
-                        <div class="form-group">
-                            <label class="col-md-3 control-label" for="Tipo">Tipo <h11>*</h11></label>
-                            <div class="col-md-4">
-                                <input id="f_tipo" name="f_tipo" placeholder="max 250 caracteres" class="form-control input-md" required="" value="" type="text" maxlength="250">
+                        <div class="container" id="contdinamico">
+                        <p>
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="Tipo">Tipo <h11>*</h11></label>
+                                <div class="col-md-4">
+                                    <input id="f_tipo" name="f_tipo[]" placeholder="max 250 caracteres" class="form-control input-md" required="" value="" type="text" maxlength="250">
+                                </div>
+                                <label class="col-md-2 control-label" for="Preço">Preço <h11>*</h11></label>
+                                <div class="col-md-2">
+                                        <input id="f_preco" name="f_preco[]" placeholder="informar preço" class="form-control input-md" required="" value="0,00" type="tel" maxlength="15" pattern="([0-9]{1,3}\.)?[0-9]{1,3},[0-9]{2}$"  />
+<!--                                    <input id="f_preco" name="f_preco[]" placeholder="informar preço" class="form-control input-md" required="" value="0,00" type="text" maxlength="15" pattern="\d+(,\d{2})?" /> -->
+                                </div>
                             </div>
-                            <label class="col-md-2 control-label" for="Preço">Preço <h11>*</h11></label>
-                            <div class="col-md-2">
-<!--                                <input id="f_preco" name="f_preco" placeholder="informar preço" class="form-control input-md" required="" value="" type="text" maxlength="12" pattern="([0-9]{1,3}\.)?[0-9]{1,3},[0-9]{2}$" onfocusout="$(this).maskMoney();" data-affixes-stay="true" data-prefix="R$ " data-thousands="." data-decimal="," />-->
-                                <input id="f_preco" name="f_preco" placeholder="informar preço" class="form-control input-md" required="" value="0,00" type="text" maxlength="15" pattern="\d+(,\d{2})?" />
+                            <!-- Text input tabela preco -->   
+                            <div class="form-group">
+                                <label class="col-md-3 control-label" for="Pagamento">Condições de Pagamento <h11>*</h11></label>
+                                <div class="col-md-8">
+                                    <textarea id="f_pagamento" name="f_pagamento[]" placeholder="max 500 caracteres" class="form-control input-md" required="" maxlength="500" rows="3" cols="100"></textarea>
+                                </div>
+                            </div>
+                            <input type="hidden" id="down" name="down"/>                    
+                            <div class="form-group">
+                                <label class="col-md-8 control-label" for="hospedagem"></label>
+                                <div class="col-md-4">
+                                    <button type="button" class="btn btn-primary" id="inchospedagem" name="inchospedagem">Incluir Novo</button>
+                                </div>
+                            </div>
+                        </p>    
+                        </div> <!--fecha container contdinamico-->
+                            <!-- Fim parte do form ref a Hospedagem -->
+
+                        <!-- Parte do form ref a Politicas -->
+                        <div class="form-group" id="documentos">
+                            <div class="col-md-12 control-label"><hr></div>
+                            <div class="col-md-2 control-label">
+                                <h3>Políticas</h3>
                             </div>
                         </div>
-                        <!-- Text input tabela preco -->   
+
+                        <!-- Text input Tabela Documentos-->     
                         <div class="form-group">
-                            <label class="col-md-3 control-label" for="Pagamento">Condições de Pagamento <h11>*</h11></label>
-                            <div class="col-md-8">
-                                <textarea id="f_pagamento" name="f_pagamento" placeholder="max 500 caracteres" class="form-control input-md" required="" maxlength="500" rows="3" cols="100"></textarea>
+                            <label class="col-md-3 control-label" for="politicas">Políticas<h11>*</h11></label>  
+                            <div class="col-md-4" id="politica">
                             </div>
                         </div>
-                        <input type="hidden" id="down" name="down"/>                    
-                        <div class="form-group">
-                            <label class="col-md-8 control-label" for="hospedagem"></label>
-                            <div class="col-md-4">
-                                <button type="button" class="btn btn-primary" id="inchospedagem" name="inchospedagem" onclick="outrahospedagem();">Informar outras opções de valores</button>
-                            </div>
-                        </div>
-                        <!-- Fim parte do form ref a Hospedagem -->
+                        <!-- Fim parte do form ref a Politicas -->
 
                         <!-- Parte do form ref a Imagens -->
                         <div class="form-group" id="imagens">
@@ -210,9 +238,15 @@
                         <div class="form-group">
                             <label class="col-md-5 control-label" for="Cadastrar"></label>
                                 <div class="col-md-4">
-                                    <button id="Cadastrar" name="Cadastrar" class="btn btn-success" type="submit">Cadastrar</button>
+                                    <button id="Cadastrar" name="Cadastrar" class="btn btn-success" type="submit" >Cadastrar</button>
                                     <button id="Cancelar" name="Cancelar" class="btn btn-danger" type="reset">Cancelar</button>
                                 </div>
+                        </div>
+                        <!-- Envia o form para processar -->
+                        <div class="row">
+                            <div class="col-md-4 alert alert-light" role="alert">
+                                <?php if (isset($_POST['f_nome'])){echo trata_o_form();}?>
+                            </div>
                         </div>
                     </div> <!--fecha panel body -->
                 </div> <!-- fecha panel - primary -->
@@ -224,52 +258,64 @@
         <script src="lib/jquery/jquery-3.4.1.min.js"></script>
         <script src="lib/bootstrap/js/bootstrap.min.js"></script>
         <script src="js/jquery.maskMoney.js" type="text/javascript"></script>
-        <script>
+
+        <!-- aplicação do R$ na mascara de valores - não está funcionando -->
+<!--        <script>
             $(function() {
                 $("f_preco").maskMoney({showSymbol:true, symbol:"R$", decimal:",", thousands:"."});
             })
-        </script>
+        </script>-->
+        
         <!-- controle de hospedagens incluidas -->
         <script>
+            $(function() {
+               var scnDiv = $('#contdinamico');
+               var i = 1;
 
-                    var objhospedagem={};
-                    var hospedagens=[];
-                    var repete = "N";
-
-                    function outrahospedagem()
-                    {
-
-                        var tipo=document.getElementById('f_tipo').value;
-                        var preco=document.getElementById('f_preco').value;
-                        var pagamento=document.getElementById('f_pagamento').value;
-                        var objhospedagem={
-                            tipo: tipo,
-                            preco: preco,
-                            pagamento: pagamento
-                        };
-
-
-                        document.getElementById('f_tipo').value="";
-                        document.getElementById('f_preco').value="";
-                        document.getElementById('f_pagamento').value="";
-
-                        document.getElementById('f_tipo').focus();
-
-                        hospedagens.push(objhospedagem);
-
-                        var form = document.getElementById('f_cadastro'); 
-                        var m = document.createElement("input"); 
-                            m.setAttribute("type", "hidden"); 
-                            m.setAttribute("id", "array"); 
-                            m.setAttribute("name", "arrayEnviado"); 
-                            m.setAttribute("value",JSON.stringify(hospedagens)); 
-                            form.appendChild(m);
-                     }
-
+               $(document).on('click','#inchospedagem', function(){
+                  $('<p>'+
+                    '<div id="new'+i+'">'+
+                    '<div class="form-group">'+
+                        '<label class="col-md-3 control-label" for="Tipo">Tipo <h11>*</h11></label>'+
+                        '<div class="col-md-4">'+
+                            '<input id="f_tipo['+i+']" name="f_tipo[]" placeholder="max 250 caracteres" class="form-control input-md" required="" value="" type="text" maxlength="250">'+
+                        '</div>'+
+                        '<label class="col-md-2 control-label" for="Preço">Preço <h11>*</h11></label>'+
+                        '<div class="col-md-2">'+
+                            '<input id="f_preco['+i+']" name="f_preco[]" placeholder="informar preço" class="form-control input-md" required="" value="0,00" type="text" maxlength="15" pattern="([0-9]{1,3}\.)?[0-9]{1,3},[0-9]{2}$" />'+
+                        '</div>'+
+                    '</div>'+
+                    '<div class="form-group">'+
+                        '<label class="col-md-3 control-label" for="Pagamento">Condições de Pagamento <h11>*</h11></label>'+
+                        '<div class="col-md-8">'+
+                            '<textarea id="f_pagamento['+i+']" name="f_pagamento[]" placeholder="max 500 caracteres" class="form-control input-md" required="" maxlength="500" rows="3" cols="100"></textarea>'+
+                        '</div>'+
+                    '</div>'+
+                    '<input type="hidden" id="down" name="down"/>'+                    
+                    '<div class="form-group">'+
+                        '<label class="col-md-8 control-label" for="hospedagem"></label>'+
+                        '<div class="col-md-4">'+
+                            '<button type="button" class="btn btn-primary" id="inchospedagem" name="inchospedagem">Incluir Novo</button>'+
+                            '<button type="button" class="btn btn_remove" id="'+i+'" name="exchospedagem">Excluir </button>'+
+                        '</div>'+
+                    '</div>'+
+                    '</div>'+
+                    '</p>').appendTo(scnDiv);
+                    
+                      i++;
+                    return false;
+               });
+               $(document).on('click','.btn_remove',function(){
+                  var button_id=$(this).attr("id");
+                  $("#new"+button_id+"").remove();
+                  return false;
+               });
+            });
         </script>
         
-        
-       <!-- <script type="text/javascript" src="js/hospedagem.js"></script>-->
-        
+        <!-- Template Main Javascript File -->
+        <script src="js/main.js"></script>                
+
 </body>
 </html>
+
